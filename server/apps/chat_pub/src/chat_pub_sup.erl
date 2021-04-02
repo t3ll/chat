@@ -26,10 +26,12 @@ start_link() ->
 %%                  type => worker(),       % optional
 %%                  modules => modules()}   % optional
 init([]) ->
-    SupFlags = #{strategy => one_for_all,
+    SupFlags = #{strategy => one_for_one,
                  intensity => 0,
                  period => 1},
-    ChildSpecs = [],
+    Server = {chat_pub_serv, {chat_pub_serv, start_link, []},
+              permanent, 2000, worker, [chat_pub_serv]},
+    ChildSpecs = [Server],
     {ok, {SupFlags, ChildSpecs}}.
 
 %% internal functions

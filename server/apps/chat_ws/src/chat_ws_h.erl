@@ -9,16 +9,16 @@ init(Req, Opts) ->
 	{cowboy_websocket, Req, Opts}.
 
 websocket_init(State) ->
-	erlang:start_timer(1000, self(), <<"Hello!">>),
+    chat_pub:subscribe(self()),
 	{[], State}.
 
 websocket_handle({text, Msg}, State) ->
-	{[{text, << "That's what she said! ", Msg/binary >>}], State};
+    chat_pub:publish(self(), {text, Msg}),
+	{[], State};
 websocket_handle(_Data, State) ->
 	{[], State}.
 
-websocket_info({timeout, _Ref, Msg}, State) ->
-	erlang:start_timer(1000, self(), <<"How' you doin'?">>),
-	{[{text, Msg}], State};
+websocket_info({publish, _From, Payload}, State) ->
+	{[Payload], State};
 websocket_info(_Info, State) ->
 	{[], State}.
