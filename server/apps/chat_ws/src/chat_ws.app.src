@@ -11,7 +11,7 @@
    ]},
   {env,[]},
   {modules, []},
-
+  {start_phases, [{start_cowboy, []}]},
   {licenses, ["Apache 2.0"]},
   {links, []}
  ]}.
